@@ -11,7 +11,7 @@ class start extends Phaser.Scene {
   create() {
     var testText = this.add.text(120,270,'Click here to start the game.',{
       fontSize: '32px',
-      fill: '#000'
+      fill: '#FFF'
     });
     testText.setInteractive()
     testText.on('pointerdown',startGameplay)
