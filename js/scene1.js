@@ -11,6 +11,7 @@ var gameOverText;
 var myBomb;
 var enemies;
 var levelStopped = false;
+var refreshText;
 class scene1 extends Phaser.Scene{
   constructor(){
     super({key:"scene1"});
@@ -54,8 +55,6 @@ class scene1 extends Phaser.Scene{
     //input events
     cursors = this.input.keyboard.createCursorKeys();
 
-    //score
-    scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
 
     //objects on ground
     this.image = this.add.image(137,480,'arrow').setScale(0.6);
@@ -183,6 +182,10 @@ class scene1 extends Phaser.Scene{
  //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
     this.physics.add.collider(player, enemies, hitBomb, null, this);
+
+    //score
+    scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
+
   }
 
   update(){
@@ -247,28 +250,16 @@ class scene1 extends Phaser.Scene{
         child.setScale(0.1,0.1);
         });
 
-         this.physics.add.collider(enemies, platforms);
-         this.physics.add.collider(player, enemies, hitBomb, null, this);
-
-      // this.scene.stop('scene1');
-      // nextLevel();
+        this.physics.add.collider(enemies, platforms);
+        this.physics.add.collider(player, enemies, hitBomb, null, this);
     }
 
   }
 
   function hitBomb (player, myBomb)
   {
-    this.physics.pause();
-
     player.setTint(0xff0000);
-
-    player.anims.play('turn');
-
-    gameOver = true;
-
-  }
-
-  function nextLevel(){
-
-    game.scene.start('scene2');
+    this.scene.pause('scene1');
+    gameOverText = this.add.text(130, 200, 'GAME OVER', { fontSize: '100px', fill: '#ff0000', stroke:'#000' });
+    refreshText = this.add.text(220, 310, 'refresh to play again', { fontSize: '25px', fill: '#000' });
   }
