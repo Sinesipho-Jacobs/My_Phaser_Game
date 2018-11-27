@@ -12,6 +12,7 @@ var myBomb;
 var enemies;
 var levelStopped = false;
 var refreshText;
+var value = Phaser.Math.Between(12,1000);
 class scene1 extends Phaser.Scene{
   constructor(){
     super({key:"scene1"});
@@ -161,7 +162,7 @@ class scene1 extends Phaser.Scene{
     enemies = this.physics.add.group({
         key: 'bomb',
         repeat: 1,
-        setXY: { x: 12, y: 0, stepX: 1000 }
+        setXY: { x: value, y: 0, stepX: 0 }
     });
 
     stars.children.iterate(function (child) {
@@ -239,7 +240,7 @@ class scene1 extends Phaser.Scene{
         enemies = this.physics.add.group({
             key: 'bomb',
             repeat: 1 + 1,
-            setXY: { x: 12, y: 0, stepX: 1000 }
+            setXY: { x: value, y: 0, stepX: 0 }
         });
 
         enemies.children.iterate(function (child) {
