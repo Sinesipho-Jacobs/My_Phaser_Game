@@ -13,15 +13,17 @@ var enemies;
 var levelStopped = false;
 var refreshText;
 var value = Phaser.Math.Between(12,1000);
+var button;
 class scene1 extends Phaser.Scene{
   constructor(){
     super({key:"scene1"});
   }
 
   preload(){
+    this.load.image('button','assets/register.png');
     this.load.image('background','assets/images/background1.png');
     this.load.image('myBomb','assets/images/bomb.png');
-    this.load.image('star', 'assets/bottle.png');
+    this.load.image('bottle', 'assets/bottle.png');
     this.load.image('bomb', 'assets/images/bomb.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('ground', 'assets/images/Tile/1.png');
@@ -52,10 +54,11 @@ class scene1 extends Phaser.Scene{
   }
 
   create(){
+    //background image
     this.image = this.add.image(400,300,'background');
+
     //input events
     cursors = this.input.keyboard.createCursorKeys();
-
 
     //objects on ground
     this.image = this.add.image(137,480,'arrow').setScale(0.6);
@@ -154,7 +157,7 @@ class scene1 extends Phaser.Scene{
     //bottle settings
 
     stars = this.physics.add.group({
-        key: 'star',
+        key: 'bottle',
         repeat: 11,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
@@ -180,13 +183,13 @@ class scene1 extends Phaser.Scene{
 
      this.physics.add.collider(stars, platforms);
      this.physics.add.collider(enemies, platforms);
- //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    this.physics.add.overlap(player, stars, collectStar, null, this);
-    this.physics.add.collider(player, enemies, hitBomb, null, this);
 
-    //score
-    scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
+     //Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
+     this.physics.add.overlap(player, stars, collectStar, null, this);
+     this.physics.add.collider(player, enemies, hitBomb, null, this);
 
+     //score
+     scoreText = this.add.text(16, 16, '0 litres', { fontSize: '32px', fill: '#000' });
   }
 
   update(){
@@ -226,8 +229,8 @@ class scene1 extends Phaser.Scene{
     star.disableBody(true, true);
 
     //  Add and update the score
-    score += 2;
-    scoreText.setText('Score: ' + score);
+    score += 5;
+    scoreText.setText(score + ' litres');
 
     if (stars.countActive(true) === 0)
     {
@@ -237,6 +240,8 @@ class scene1 extends Phaser.Scene{
 
         });
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        //add more bombs
         enemies = this.physics.add.group({
             key: 'bomb',
             repeat: 1 + 1,
