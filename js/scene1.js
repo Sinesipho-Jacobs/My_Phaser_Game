@@ -14,6 +14,9 @@ var levelStopped = false;
 var refreshText;
 var value = Phaser.Math.Between(12,1000);
 var button;
+var previousScore;
+var prevText;
+
 class scene1 extends Phaser.Scene{
   constructor(){
     super({key:"scene1"});
@@ -189,7 +192,16 @@ class scene1 extends Phaser.Scene{
      this.physics.add.collider(player, enemies, hitBomb, null, this);
 
      //score
-     scoreText = this.add.text(16, 16, '0 litres', { fontSize: '32px', fill: '#000' });
+     scoreText = this.add.text(16, 60, 'Score: 0', { fontSize: '32px', fill: '#000' });
+
+     previousScore = localStorage.getItem('score');
+
+   if(localStorage.getItem('score') == null){
+        prevText = this.add.text(16, 16, 'Highest Score: 0', { fontSize: '32px', fill: '#ff0000' });
+   }
+   else{
+        prevText = this.add.text(16, 16, 'Highest Score: ' + previousScore, { fontSize: '32px', fill: '#ff0000' });
+   }
   }
 
   update(){
@@ -230,7 +242,7 @@ class scene1 extends Phaser.Scene{
 
     //  Add and update the score
     score += 5;
-    scoreText.setText(score + ' litres');
+    scoreText.setText('Score: ' + score);
 
     if (stars.countActive(true) === 0)
     {
@@ -268,4 +280,7 @@ class scene1 extends Phaser.Scene{
     this.scene.pause('scene1');
     gameOverText = this.add.text(130, 200, 'GAME OVER', { fontSize: '100px', fill: '#ff0000', stroke:'#000' });
     refreshText = this.add.text(220, 310, 'refresh to play again', { fontSize: '25px', fill: '#000' });
+    if(localStorage.getItem('score') == null || (score > previousScore)){
+       localStorage.setItem('score',score);
+     }
   }
