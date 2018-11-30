@@ -13,8 +13,10 @@ class start extends Phaser.Scene {
       fontSize: '32px',
       fill: '#000'
     });
-    testText.setInteractive()
-    testText.on('pointerdown',startGameplay)
+    
+    this.input.on('pointerdown',function(event){
+      startGameplay();
+    },this);
 
   }
   update() {
