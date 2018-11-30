@@ -13,7 +13,11 @@ class start extends Phaser.Scene {
       fontSize: '32px',
       fill: '#000'
     });
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 0897cfe858420ff9f8b6112bec65bce8799681c4
     this.input.on('pointerdown',function(event){
       startGameplay();
     },this);
