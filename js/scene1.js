@@ -16,6 +16,8 @@ var value = Phaser.Math.Between(12,1000);
 var button;
 var previousScore;
 var prevText;
+var pause;
+var play;
 
 class scene1 extends Phaser.Scene{
   constructor(){
@@ -23,6 +25,8 @@ class scene1 extends Phaser.Scene{
   }
 
   preload(){
+    this.load.image('pause','assets/1250992.svg');
+    this.load.image('play','assets/149657.svg');
     this.load.image('button','assets/register.png');
     this.load.image('background','assets/images/background1.png');
     this.load.image('myBomb','assets/images/bomb.png');
@@ -131,6 +135,23 @@ class scene1 extends Phaser.Scene{
     platforms.create(740, 190, 'ground2').setScale(0.6).refreshBody();
     platforms.create(810, 190, 'ground2').setScale(0.6).refreshBody();
 
+    // pause = this.add.image(750,30,'pause').setScale(0.07);
+    // pause.setInteractive();
+    //
+    // //pause
+    // pause.on('pointerdown',function(event){
+    //   this.scene.pause();
+    // },this);
+    //
+    // //play
+    // play = this.add.image(750,80,'play').setScale(0.2);
+    // play.setInteractive();
+    //
+    //
+    //   play.on('pointerdown',function(event){
+    //   this.scene.resume('scene1');
+    // },this);
+
     //player settings
     player = this.physics.add.sprite(100, 450, 'dude');
     player.setBounce(0.2);
@@ -202,6 +223,8 @@ class scene1 extends Phaser.Scene{
    else{
         prevText = this.add.text(16, 16, 'Highest Score: ' + previousScore, { fontSize: '32px', fill: '#ff0000' });
    }
+
+
   }
 
   update(){
