@@ -14,6 +14,11 @@ class start extends Phaser.Scene {
       fill: '#000'
     });
     
+     var instructionText = this.add.text(90,320,'(use the keyboard arrow keys to move the character)',{
+     fontSize: '20px',
+     fill: '#000'
+    });
+    
     this.input.on('pointerdown',function(event){
       startGameplay();
     },this);
