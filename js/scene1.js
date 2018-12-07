@@ -18,6 +18,9 @@ var previousScore;
 var prevText;
 var pause;
 var play;
+var replay;
+var hit = false;
+var newHighScore;
 
 class scene1 extends Phaser.Scene{
   constructor(){
@@ -25,6 +28,8 @@ class scene1 extends Phaser.Scene{
   }
 
   preload(){
+    this.load.audio('score','assets/score.mp3');
+    this.load.image('replay','assets/download.png');
     this.load.image('pause','assets/1250992.svg');
     this.load.image('play','assets/149657.svg');
     this.load.image('button','assets/register.png');
@@ -67,6 +72,7 @@ class scene1 extends Phaser.Scene{
     //input events
     cursors = this.input.keyboard.createCursorKeys();
 
+    newHighScore = this.sound.add('score');
     //objects on ground
     this.image = this.add.image(137,480,'arrow').setScale(0.6);
     this.image = this.add.image(50,483,'stone').setScale(0.6);
@@ -213,17 +219,19 @@ class scene1 extends Phaser.Scene{
      this.physics.add.collider(player, enemies, hitBomb, null, this);
 
      //score
-     scoreText = this.add.text(16, 60, 'Score: 0', { fontSize: '32px', fill: '#000' });
+     scoreText = this.add.text(16, 45, 'Score: 0', { fontSize: '18px', fill: '#000' });
 
      previousScore = localStorage.getItem('score');
 
+
    if(localStorage.getItem('score') == null){
-        prevText = this.add.text(16, 16, 'Highest Score: 0', { fontSize: '32px', fill: '#ff0000' });
+        prevText = this.add.text(16, 16, 'Highest Score: 0', { fontSize: '18px', fill: '#ff0000' });
    }
    else{
-        prevText = this.add.text(16, 16, 'Highest Score: ' + previousScore, { fontSize: '32px', fill: '#ff0000' });
+        prevText = this.add.text(16, 16, 'Highest Score: ' + previousScore, { fontSize: '18px', fill: '#ff0000' });
    }
 
+   
 
   }
 
@@ -254,9 +262,15 @@ class scene1 extends Phaser.Scene{
         player.setVelocityY(-330);
     }
 
-    if(levelStopped == true){
-      nextLevel();
+    if(hit == true){
+        player.setVelocityX(0);
+        player.setVelocityY(0);
     }
+    if(replay){
+        hit = false;
+    }
+   
+   
   }
 }
   function collectStar (player, star)
@@ -299,11 +313,28 @@ class scene1 extends Phaser.Scene{
 
   function hitBomb (player, myBomb)
   {
+    hit = true;
     player.setTint(0xff0000);
-    this.scene.pause('scene1');
+     this.physics.pause();
+     enemies.setVelocity(0,0);
     gameOverText = this.add.text(130, 200, 'GAME OVER', { fontSize: '100px', fill: '#ff0000', stroke:'#000' });
-    refreshText = this.add.text(220, 310, 'refresh to play again', { fontSize: '25px', fill: '#000' });
+    
+    replay = this.add.image(380,350,'replay').setScale(0.5);
+    replay.setInteractive();
+    replay.on('pointerdown',function(event){
+        score = 0;
+      this.scene.restart('scene1');
+      
+    },this);
+
     if(localStorage.getItem('score') == null || (score > previousScore)){
-       localStorage.setItem('score',score);
+       localStorage.setItem('score',score); 
      }
+
+     if(score > previousScore){
+        newHighScore.play();
+     }
+
+     
   }
+
