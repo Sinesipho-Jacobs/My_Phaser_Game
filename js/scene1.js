@@ -1,4 +1,3 @@
-
 var player;
 var stars;
 var bombs;
@@ -21,6 +20,9 @@ var play;
 var replay;
 var hit = false;
 var newHighScore;
+var over;
+var higher;
+var newScore;
 
 class scene1 extends Phaser.Scene{
   constructor(){
@@ -28,6 +30,7 @@ class scene1 extends Phaser.Scene{
   }
 
   preload(){
+    this.load.audio('over','assets/over.mp3');
     this.load.audio('score','assets/score.mp3');
     this.load.image('replay','assets/download.png');
     this.load.image('pause','assets/1250992.svg');
@@ -73,6 +76,7 @@ class scene1 extends Phaser.Scene{
     cursors = this.input.keyboard.createCursorKeys();
 
     newHighScore = this.sound.add('score');
+    over = this.sound.add('over');
     //objects on ground
     this.image = this.add.image(137,480,'arrow').setScale(0.6);
     this.image = this.add.image(50,483,'stone').setScale(0.6);
@@ -141,23 +145,6 @@ class scene1 extends Phaser.Scene{
     platforms.create(740, 190, 'ground2').setScale(0.6).refreshBody();
     platforms.create(810, 190, 'ground2').setScale(0.6).refreshBody();
 
-    // pause = this.add.image(750,30,'pause').setScale(0.07);
-    // pause.setInteractive();
-    //
-    // //pause
-    // pause.on('pointerdown',function(event){
-    //   this.scene.pause();
-    // },this);
-    //
-    // //play
-    // play = this.add.image(750,80,'play').setScale(0.2);
-    // play.setInteractive();
-    //
-    //
-    //   play.on('pointerdown',function(event){
-    //   this.scene.resume('scene1');
-    // },this);
-
     //player settings
     player = this.physics.add.sprite(100, 450, 'dude');
     player.setBounce(0.2);
@@ -184,8 +171,8 @@ class scene1 extends Phaser.Scene{
         frameRate: 10,
         repeat: -1
     });
-    //bottle settings
 
+    //bottle settings
     stars = this.physics.add.group({
         key: 'bottle',
         repeat: 11,
@@ -221,18 +208,7 @@ class scene1 extends Phaser.Scene{
      //score
      scoreText = this.add.text(16, 45, 'Score: 0', { fontSize: '18px', fill: '#000' });
 
-     previousScore = localStorage.getItem('score');
-
-
-   if(localStorage.getItem('score') == null){
-        prevText = this.add.text(16, 16, 'Highest Score: 0', { fontSize: '18px', fill: '#ff0000' });
-   }
-   else{
-        prevText = this.add.text(16, 16, 'Highest Score: ' + previousScore, { fontSize: '18px', fill: '#ff0000' });
-   }
-
-   
-
+    prevText = this.add.text(16, 16, 'Highest Score: 0', { fontSize: '18px', fill: '#ff0000' });
   }
 
   update(){
@@ -269,20 +245,39 @@ class scene1 extends Phaser.Scene{
     if(replay){
         hit = false;
     }
-   
-   
+   previousScore = localStorage.getItem('score');
+  
+   if(localStorage.getItem('score') != null){
+       prevText.setText('Highest Score: ' + previousScore);
+         }
+            if(score > previousScore){
+         prevText.setText('Highest Score: ' + score);
+          newScore = this.add.text(500, 16, 'You have a new HIGH SCORE', { fontSize: '18px', fill: '#008000' });
+
+     }
   }
+
 }
   function collectStar (player, star)
   {
+    previousScore = localStorage.getItem('score');
     star.disableBody(true, true);
+
 
     //  Add and update the score
     score += 5;
     scoreText.setText('Score: ' + score);
+     //    if(score > previousScore){
+     //     // prevText = this.add.text(500, 16, 'You have a new HIGH SCORE', { fontSize: '18px', fill: '#008000' });
 
+     // }
+  if(localStorage.getItem('score') == null){
+         prevText.setText('Highest Score: ' + score);
+         }
+  
     if (stars.countActive(true) === 0)
     {
+     newHighScore.play();
       stars.children.iterate(function (child) {
 
         child.enableBody(true, child.x, 0, true, true);
@@ -313,6 +308,7 @@ class scene1 extends Phaser.Scene{
 
   function hitBomb (player, myBomb)
   {
+    over.play();
     hit = true;
     player.setTint(0xff0000);
      this.physics.pause();
@@ -330,11 +326,5 @@ class scene1 extends Phaser.Scene{
     if(localStorage.getItem('score') == null || (score > previousScore)){
        localStorage.setItem('score',score); 
      }
-
-     if(score > previousScore){
-        newHighScore.play();
-     }
-
-     
   }
 
