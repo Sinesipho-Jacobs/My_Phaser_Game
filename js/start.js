@@ -5,16 +5,17 @@ class start extends Phaser.Scene {
     });
   }
   preload() {
-    console.log("Start screen");
+    this.load.image('background','assets/images/background1.png');
 
   }
   create() {
-    var testText = this.add.text(120,270,'Click here to start the game.',{
+    this.image = this.add.image(400,300,'background');
+    var testText = this.add.text(120,230,'Click here to start the game.',{
       fontSize: '32px',
       fill: '#000'
     });
     
-     var instructionText = this.add.text(90,320,'(use the keyboard arrow keys to move the character)',{
+     var instructionText = this.add.text(90,280,'(use the keyboard arrow keys to move the character)',{
      fontSize: '20px',
      fill: '#000'
     });
